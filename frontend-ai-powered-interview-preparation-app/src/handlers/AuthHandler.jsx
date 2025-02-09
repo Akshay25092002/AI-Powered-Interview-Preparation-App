@@ -2,7 +2,6 @@ import LoaderPage from "@/routes/LoaderPage";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { OpMsgResponse } from "./../../../backend-ai-powered-interview-preparation-app/node_modules/mongodb/src/cmap/commands";
 
 const AuthHandler = () => {
   const { isSignedIn } = useAuth();
@@ -35,7 +34,7 @@ const AuthHandler = () => {
           }
 
           //const response = await userSnap.json();
-          if (!OpMsgResponse || Object.keys(response).length === 0) {
+          if (!response || Object.keys(response).length === 0) {
             const userData = await fetch(
               "http://localhost:3000/api/auth/adduser",
               {

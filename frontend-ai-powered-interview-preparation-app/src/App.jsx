@@ -6,8 +6,10 @@ import AuthLayout from "@/layouts/AuthLayout";
 import SignInPage from "@/routes/SignInPage";
 import SignUpPage from "@/routes/SignUpPage";
 import ProtectedLayout from "@/layouts/ProtectedLayout";
-import LoaderPage from "@/routes/LoaderPage";
 import MainLayout from "@/layouts/MainLayout";
+import Generate from "./components/Generate";
+import Dashboard from "./routes/Dashboard";
+import CreateEditPage from "./routes/CreateEditPage";
 
 function App() {
   return (
@@ -32,7 +34,12 @@ function App() {
             </ProtectedLayout>
           }
         >
-          <Route element={<LoaderPage />} />
+          {/* add all the protect routes */}
+          <Route path="/generate" element={<Generate />}>
+            <Route index element={<Dashboard />} />
+            {/* here :interviewId (":name --> takes dynamic path") assume as "/create" */}
+            <Route path=":interviewId" element={<CreateEditPage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -20,6 +20,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { chatSession } from "@/scripts";
 
 const formSchema = z.object({
   position: z
@@ -44,20 +45,109 @@ const FormMockInterview = ({ initialData }) => {
   const navigate = useNavigate();
   const { userId } = useAuth();
 
-  const title = initialData?.position
+  const title = initialData
     ? initialData?.position
     : "Create a new Mock Interview";
 
-  const breadCrumbPage = initialData?.position ? "Edit" : "Create";
+  const breadCrumbPage = initialData ? initialData?.position : "Create";
   const actions = initialData ? "Save Changes" : "Create";
   const toastMessage = initialData
     ? { title: "Updated..!", description: "Changes saved successfully..." }
     : { title: "Created..!", description: "New Mock Interview created..." };
 
+  const cleanAiResponse = (responseText) => {
+    // Step 1: Trim any surrounding whitespace
+    let cleanText = responseText.trim();
+
+    // Step 2: Remove any occurrences of "json" or code block symbols (``` or `)
+    cleanText = cleanText.replace(/(json|```|`)/g, "");
+
+    // Step 3: Extract a JSON array by capturing text between square brackets
+    const jsonArrayMatch = cleanText.match(/\[.*\]/s);
+    if (jsonArrayMatch) {
+      cleanText = jsonArrayMatch[0];
+    } else {
+      throw new Error("No JSON array found in response");
+    }
+
+    // Step 4: Parse the clean JSON text into an array of objects
+    try {
+      return JSON.parse(cleanText);
+    } catch (error) {
+      throw new Error("Invalid JSON format: " + error?.message);
+    }
+  };
+
+  const generateAiResponse = async (data) => {
+    const prompt = `
+        As an experienced prompt engineer, generate a JSON array containing 5 technical interview questions along with detailed answers based on the following job information. Each object in the array should have the fields "question" and "answer", formatted as follows:
+
+        [
+          { "question": "<Question text>", "answer": "<Answer text>" },
+          ...
+        ]
+
+        Job Information:
+        - Job Position: ${data?.position}
+        - Job Description: ${data?.description}
+        - Years of Experience Required: ${data?.experience}
+        - Tech Stacks: ${data?.techStack}
+
+        The questions should assess skills in ${data?.techStack} development and best practices, problem-solving, and experience handling complex requirements. Please format the output strictly as an array of JSON objects without any additional labels, code blocks, or explanations. Return only the JSON array with questions and answers.
+        `;
+
+    const aiResult = await chatSession.sendMessage(prompt);
+    const cleanedResponse = cleanAiResponse(aiResult.response.text());
+    console.log(cleanedResponse);
+    return cleanedResponse;
+  };
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      console.log(data);
+      //console.log(data);
+      if (initialData) {
+        //update process
+        if (isValid) {
+          const aiResult = await generateAiResponse(data);
+          await fetch("http://localhost:3000/api/auth/updateInterview", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: initialData?._id,
+              questions: aiResult,
+              ...data,
+            }),
+          });
+
+          toast(toastMessage.title, { description: toastMessage.description });
+        }
+      } else {
+        //create a new mock interview
+        if (isValid) {
+          const aiResult = await generateAiResponse(data);
+          const response = await fetch(
+            "http://localhost:3000/api/auth/createInterview",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId: userId,
+                questions: aiResult,
+                ...data,
+              }),
+            }
+          );
+          const json = await response.json();
+          console.log(json);
+
+          toast(toastMessage.title, { description: toastMessage.description });
+        }
+      }
+      navigate("/generate", { replace: true });
     } catch (error) {
       console.log(error);
       toast.error("Error..", {

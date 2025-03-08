@@ -10,6 +10,9 @@ import MainLayout from "@/layouts/MainLayout";
 import Generate from "./components/Generate";
 import Dashboard from "./routes/Dashboard";
 import CreateEditPage from "./routes/CreateEditPage";
+import MockLoadPage from "./routes/MockLoadPage";
+import MockInterviewPage from "./routes/MockInterviewPage";
+import Feedback from "./routes/Feedback";
 
 function App() {
   return (
@@ -39,6 +42,12 @@ function App() {
             <Route index element={<Dashboard />} />
             {/* here :interviewId (":name --> takes dynamic path") assume as "/create" */}
             <Route path=":interviewId" element={<CreateEditPage />} />
+            <Route path="interview/:interviewId" element={<MockLoadPage />} />
+            <Route
+              path="interview/:interviewId/start"
+              element={<MockInterviewPage />}
+            />
+            <Route path="feedback/:interviewId" element={<Feedback />} />
           </Route>
         </Route>
       </Routes>

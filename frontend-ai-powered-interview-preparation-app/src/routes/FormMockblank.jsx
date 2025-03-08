@@ -29,11 +29,11 @@ const CreateEditPage = () => {
           if (data) {
             setInterview({
               id: data._id, // Assuming MongoDB uses `_id`
-              ...data,
+              ...data(),
             });
           }
         } catch (error) {
-          console.error("Error fetching interview:", error);
+          console.log(error);
         }
       }
     };

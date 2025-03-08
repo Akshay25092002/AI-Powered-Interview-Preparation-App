@@ -5,7 +5,6 @@ const { Schema, model } = mongoose;
 const InterviewSchema = new Schema({
     id: {
         type: String,
-        required: true,
     },
     position: {
         type: String,

@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/BaseURL";
 import FormMockInterview from "@/components/FormMockInterview";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -12,7 +13,7 @@ const CreateEditPage = () => {
       if (interviewId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/auth/getinterview?id=${interviewId}`,
+            `${BASE_URL}/api/auth/getinterview?id=${interviewId}`,
             {
               method: "GET",
               headers: {

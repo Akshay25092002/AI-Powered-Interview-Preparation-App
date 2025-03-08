@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/accordion";
 import { CircleCheck, Star } from "lucide-react";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { BASE_URL } from "@/BaseURL";
 
 const Feedback = () => {
   const [interview, setInterview] = useState(null);
@@ -34,7 +35,7 @@ const Feedback = () => {
     const fetchInterview = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/auth/getinterview?id=${interviewId}`
+          `${BASE_URL}/api/auth/getinterview?id=${interviewId}`
         );
 
         if (!response.ok) {
@@ -59,7 +60,7 @@ const Feedback = () => {
       setIsLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:3000/api/auth/answers/get?userId=${userId}&interviewIdRef=${interviewId}`
+          `${BASE_URL}/api/auth/answers/get?userId=${userId}&interviewIdRef=${interviewId}`
         );
 
         if (!response.ok) {

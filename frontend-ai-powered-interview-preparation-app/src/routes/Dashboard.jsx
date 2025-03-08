@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/BaseURL";
 import Headings from "@/components/Headings";
 import InterviewPin from "@/components/InterviewPin";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ const Dashboard = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:3000/api/auth/getinterviews?id=${userId}`
+          `${BASE_URL}/api/auth/getinterviews?id=${userId}`
         );
 
         if (!response.ok) {

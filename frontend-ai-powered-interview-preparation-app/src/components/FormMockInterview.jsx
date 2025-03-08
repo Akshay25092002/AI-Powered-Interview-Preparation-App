@@ -21,6 +21,7 @@ import {
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { chatSession } from "@/scripts";
+import { BASE_URL } from "@/BaseURL";
 
 const formSchema = z.object({
   position: z
@@ -109,7 +110,7 @@ const FormMockInterview = ({ initialData }) => {
         //update process
         if (isValid) {
           const aiResult = await generateAiResponse(data);
-          await fetch("http://localhost:3000/api/auth/updateInterview", {
+          await fetch(`${BASE_URL}/api/auth/updateInterview`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -127,20 +128,17 @@ const FormMockInterview = ({ initialData }) => {
         //create a new mock interview
         if (isValid) {
           const aiResult = await generateAiResponse(data);
-          const response = await fetch(
-            "http://localhost:3000/api/auth/createInterview",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                userId: userId,
-                questions: aiResult,
-                ...data,
-              }),
-            }
-          );
+          const response = await fetch(`${BASE_URL}/api/auth/createInterview`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              questions: aiResult,
+              ...data,
+            }),
+          });
           const json = await response.json();
           console.log(json);
 

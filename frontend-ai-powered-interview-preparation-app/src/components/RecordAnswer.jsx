@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { chatSession } from "@/scripts";
 import SaveModel from "./SaveModel";
+import { BASE_URL } from "@/BaseURL";
 
 const RecordAnswer = ({ question, isWebcam, setIsWebcam }) => {
   const {
@@ -122,7 +123,7 @@ const RecordAnswer = ({ question, isWebcam, setIsWebcam }) => {
 
       // ✅ Check if the user has already answered this question
       const checkResponse = await fetch(
-        `http://localhost:3000/api/auth/answer/check?userId=${userId}&question=${encodeURIComponent(
+        `${BASE_URL}/api/auth/answer/check?userId=${userId}&question=${encodeURIComponent(
           currentQuestion
         )}`
       );

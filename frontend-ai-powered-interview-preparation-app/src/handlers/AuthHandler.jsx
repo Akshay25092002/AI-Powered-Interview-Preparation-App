@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/BaseURL";
 import LoaderPage from "@/routes/LoaderPage";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import React, { useEffect, useState } from "react";
@@ -19,7 +20,7 @@ const AuthHandler = () => {
         setLoading(true);
         try {
           const userSnap = await fetch(
-            `http://localhost:3000/api/auth/getuser?id=${user.id}`,
+            `${BASE_URL}/api/auth/getuser?id=${user.id}`,
             {
               method: "GET",
               headers: {
@@ -35,21 +36,18 @@ const AuthHandler = () => {
 
           //const response = await userSnap.json();
           if (!response || Object.keys(response).length === 0) {
-            const userData = await fetch(
-              "http://localhost:3000/api/auth/adduser",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  id: user.id,
-                  name: user.fullName || user.firstName || "Anonymous",
-                  email: user.primaryEmailAddress?.emailAddress || "N/A",
-                  imageUrl: user.imageUrl,
-                }),
-              }
-            );
+            const userData = await fetch(`${BASE_URL}/api/auth/adduser`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id: user.id,
+                name: user.fullName || user.firstName || "Anonymous",
+                email: user.primaryEmailAddress?.emailAddress || "N/A",
+                imageUrl: user.imageUrl,
+              }),
+            });
             const json = await userData.json();
             console.log("New user added:", json);
           }

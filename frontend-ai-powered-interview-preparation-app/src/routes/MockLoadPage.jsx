@@ -7,6 +7,7 @@ import { Lightbulb, Sparkles, WebcamIcon } from "lucide-react";
 import InterviewPin from "@/components/InterviewPin";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Webcam from "react-webcam";
+import { BASE_URL } from "@/BaseURL";
 
 const MockLoadPage = () => {
   const { interviewId } = useParams();
@@ -22,7 +23,7 @@ const MockLoadPage = () => {
       if (interviewId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/auth/getinterview?id=${interviewId}`,
+            `${BASE_URL}/api/auth/getinterview?id=${interviewId}`,
             {
               method: "GET",
               headers: {

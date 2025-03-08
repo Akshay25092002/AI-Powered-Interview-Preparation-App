@@ -5,6 +5,7 @@ import CustomBreadCrumb from "@/components/CustomBreadCrumb";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb } from "lucide-react";
 import QuestionSection from "@/components/QuestionSection";
+import { BASE_URL } from "@/BaseURL";
 
 const MockInterviewPage = () => {
   const { interviewId } = useParams();
@@ -21,7 +22,7 @@ const MockInterviewPage = () => {
       if (interviewId) {
         try {
           const response = await fetch(
-            `http://localhost:3000/api/auth/getinterview?id=${interviewId}`,
+            `${BASE_URL}/api/auth/getinterview?id=${interviewId}`,
             {
               method: "GET",
               headers: {
